@@ -89,12 +89,15 @@ const refresh = async () => {
       tableData.push(...getBookcaseAreaList(bookcaseList))
       areaList.length = 0
       areaList.push(...tableData.map((item) => ({ text: item.area, value: item.area })))
+      ElMessage.success('数据刷新成功！')
+      refershLoading.value = false
+      disabled.value = false
     })
     .catch((err) => {
       ElMessage.error(err)
+      refershLoading.value = false
+      disabled.value = false
     })
-  refershLoading.value = false
-  disabled.value = false
 }
 
 // click 打开编辑弹框 重置数据和表单验证
@@ -117,7 +120,7 @@ const addCabinet = (index: number, row: BookcaseInfo) => {
       await addBookcase(bookcases)
         .then((res) => {
           if (res.data.code == 200) {
-            ElMessage.success(res.data.message)
+            ElMessage.success('添加成功！')
             refresh()
           } else {
             ElMessage.error(res.data.message)
@@ -147,7 +150,7 @@ const reduceCabinet = (index: number, row: BookcaseInfo) => {
       await reduceBookcase(bookcases)
         .then((res) => {
           if (res.data.code == 200) {
-            ElMessage.success(res.data.message)
+            ElMessage.success('删减成功！')
             refresh()
           } else {
             ElMessage.error(res.data.message)
@@ -188,7 +191,7 @@ const modifyAreaName = (formEl: FormInstance | undefined, index: number, row: Bo
           await renameBookcase(bookcases)
             .then((res) => {
               if (res.data.code == 200) {
-                ElMessage.success(res.data.message)
+                ElMessage.success('修改成功！')
                 refresh()
               } else {
                 ElMessage.error(res.data.message)
@@ -251,7 +254,7 @@ const addArea = (formEl: FormInstance | undefined) => {
           await createBookcase(bookcases)
             .then((res) => {
               if (res.data.code == 200) {
-                ElMessage.success(res.data.message)
+                ElMessage.success('添加成功！')
                 refresh()
               } else {
                 ElMessage.error(res.data.message)
@@ -302,7 +305,7 @@ const deleteArea = () => {
         await deleteBookcase(bookcases)
           .then((res) => {
             if (res.data.code == 200) {
-              ElMessage.success(res.data.message)
+              ElMessage.success('删除成功！')
               refresh()
             } else {
               ElMessage.error(res.data.message)
@@ -364,7 +367,7 @@ const deleteArea = () => {
             </el-form-item>
           </el-form>
           <template #footer>
-            <span class="dialog-footer">
+            <span>
               <el-button @click="cancelAddArea(cabinetAreaFormRef)">取消</el-button>
               <el-button type="primary" @click="addArea(cabinetAreaFormRef)"> 添加 </el-button>
             </span>
@@ -386,7 +389,7 @@ const deleteArea = () => {
             <el-checkbox v-for="area in areaList" :key="area.value" :label="area.text" />
           </el-checkbox-group>
           <template #footer>
-            <span class="dialog-footer">
+            <span>
               <el-button @click="cancelDeleteArea">取消</el-button>
               <el-button type="danger" @click="deleteArea"> 删除 </el-button>
             </span>

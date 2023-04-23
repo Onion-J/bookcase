@@ -30,7 +30,7 @@ const refresh = () => {
         <el-button :disabled="disabled" :icon="Refresh" @click="refresh" />
       </div>
 
-      <el-carousel height="32vw">
+      <el-carousel v-loading="refershLoading" element-loading-text="Loading..." height="32vw">
         <el-carousel-item v-for="item in 6" :key="item">
           <el-image style="width: 100%; height: 100%" :src="url" fit="cover">
             <template #placeholder>

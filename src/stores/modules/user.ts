@@ -23,6 +23,7 @@ const useUserStore = defineStore(
               userInfo.value = res.data.data.user
               token.value = res.data.data.token
               resolve()
+              return
             }
             reject(res.data.message)
           })
@@ -39,6 +40,7 @@ const useUserStore = defineStore(
             if (res.data.code == 200) {
               userInfo.value = res.data.data.user
               resolve()
+              return
             }
 
             reject(res.data.message)

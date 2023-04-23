@@ -40,4 +40,9 @@ import ImageCard from './components/ImageCard.vue'
   left: 0;
   right: 0;
 }
+.title {
+  width: 500px;
+  user-select: none;
+  cursor: default;
+}
 </style>

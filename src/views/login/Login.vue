@@ -60,11 +60,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             duration: 2000,
             offset: 50
           })
+          loading.value = false
         })
         .catch((err) => {
           ElMessage.error(err)
+          loading.value = false
         })
-      loading.value = false
     }
   })
 }

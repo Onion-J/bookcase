@@ -14,6 +14,7 @@ const useBookcaseStore = defineStore('bookcaseState', () => {
           if (res.data.code == 200) {
             bookcaseList.value = res.data.data.bookcaseList
             resolve()
+            return
           }
           reject(res.data.message)
         })
