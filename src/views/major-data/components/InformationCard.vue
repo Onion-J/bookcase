@@ -3,7 +3,6 @@ import { Refresh, Plus, Minus, Edit } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { reactive, ref } from 'vue'
 import instituteStore from '@/stores/modules/institute'
-import { da } from 'element-plus/es/locale'
 
 interface Institute {
   id: string
