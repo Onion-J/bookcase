@@ -61,12 +61,9 @@ router.beforeEach((to, from, next) => {
             if (superAdminList.includes(to.path)) {
               // 访问超级管理员模块
               next('/401')
-            } else {
-              next()
             }
-          } else {
-            next()
           }
+          next()
         })
         .catch((err) => {
           ElMessage.error(err)

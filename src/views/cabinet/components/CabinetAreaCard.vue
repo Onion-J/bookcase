@@ -80,7 +80,7 @@ const disabled = ref(false)
 const refresh = async () => {
   refershLoading.value = true
   disabled.value = true
-  store
+  await store
     .GetBookcaseInfo()
     .then(() => {
       const bookcaseList = store.bookcaseList
@@ -90,14 +90,12 @@ const refresh = async () => {
       areaList.length = 0
       areaList.push(...tableData.map((item) => ({ text: item.area, value: item.area })))
       ElMessage.success('数据刷新成功！')
-      refershLoading.value = false
-      disabled.value = false
     })
     .catch((err) => {
       ElMessage.error(err)
-      refershLoading.value = false
-      disabled.value = false
     })
+  refershLoading.value = false
+  disabled.value = false
 }
 
 // click 打开编辑弹框 重置数据和表单验证
@@ -200,7 +198,6 @@ const modifyAreaName = (formEl: FormInstance | undefined, index: number, row: Bo
             .catch((err) => {
               ElMessage.error(err)
             })
-
           formEl.resetFields()
         })
         .catch(() => {
@@ -301,7 +298,9 @@ const deleteArea = () => {
       type: 'warning'
     })
       .then(async () => {
-        const bookcases = Object.values(checkedArea.value).map((item) => ({ areaName: item }))
+        const bookcases = {
+          deleteList: Object.values(checkedArea.value).map((item) => ({ areaName: item }))
+        }
         await deleteBookcase(bookcases)
           .then((res) => {
             if (res.data.code == 200) {
@@ -353,7 +352,7 @@ const deleteArea = () => {
               label="区域名称"
               prop="area"
               :label-width="120"
-              :rules="[{ required: true, message: '请输入区域名称！' }]"
+              :rules="[{ required: true, message: '请输入区域名称！', trigger: 'blur' }]"
             >
               <el-input v-model="cabinetAreaForm.area" type="text" autocomplete="off" />
             </el-form-item>
@@ -458,7 +457,7 @@ const deleteArea = () => {
                 <el-form-item
                   label="区域新名称"
                   prop="areaName"
-                  :rules="[{ required: true, message: '请输入区域名称！' }]"
+                  :rules="[{ required: true, message: '请输入区域名称！', trigger: 'blur' }]"
                 >
                   <el-input v-model="areaNameForm.areaName" type="text" autocomplete="off" />
                 </el-form-item>

@@ -69,41 +69,41 @@ const collegeAndMajorOptions = [
 ]
 
 const tableData = ref<Student[]>([
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    phone: '13407075265'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    phone: '13407075265'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    phone: '13407075265'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    phone: '13407075265'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    phone: '13407075265'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    phone: '13407075265'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    phone: '13407075265'
-  }
+  // {
+  //   studentId: '119060300216',
+  //   name: '揭洋',
+  //   phone: '13407075265'
+  // },
+  // {
+  //   studentId: '119060300216',
+  //   name: '揭洋',
+  //   phone: '13407075265'
+  // },
+  // {
+  //   studentId: '119060300216',
+  //   name: '揭洋',
+  //   phone: '13407075265'
+  // },
+  // {
+  //   studentId: '119060300216',
+  //   name: '揭洋',
+  //   phone: '13407075265'
+  // },
+  // {
+  //   studentId: '119060300216',
+  //   name: '揭洋',
+  //   phone: '13407075265'
+  // },
+  // {
+  //   studentId: '119060300216',
+  //   name: '揭洋',
+  //   phone: '13407075265'
+  // },
+  // {
+  //   studentId: '119060300216',
+  //   name: '揭洋',
+  //   phone: '13407075265'
+  // }
 ])
 
 const studentId = ref('')
@@ -178,12 +178,8 @@ const reset = () => {
           </template>
         </el-input>
 
-        <div style="margin-right: 20px">
-          <el-select
-            v-model="enrollmentYear"
-            placeholder="按入学年份检索"
-            style="width: 150px; margin-right: 10px"
-          >
+        <div style="display: flex; align-items: center; margin-right: 20px">
+          <el-select v-model="enrollmentYear" placeholder="按入学年份检索" style="width: 150px">
             <el-option
               v-for="item in enrollmentYearOptions"
               :key="item.value"
@@ -191,7 +187,7 @@ const reset = () => {
               :value="item.value"
             />
           </el-select>
-
+          <div style="margin: 0 3px">-</div>
           <el-cascader
             v-model="collegeAndMajor"
             :options="collegeAndMajorOptions"

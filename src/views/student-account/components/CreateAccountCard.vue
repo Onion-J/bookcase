@@ -1,51 +1,50 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
+import instituteStore from '@/stores/modules/institute'
 
+interface Institute {
+  id: string
+  name: string
+  major: Major[]
+}
+
+interface Major {
+  instituteId: string
+  id: string
+  name: string
+}
+
+// 生成年份
+const date = new Date()
+const year = date.getFullYear()
 const enrollmentYear = ref('')
 const enrollmentYearOptions = [
-  {
-    value: '19',
-    label: '2019'
-  },
-  {
-    value: '20',
-    label: '2020'
-  },
-  {
-    value: '21',
-    label: '2021'
-  },
-  {
-    value: '22',
-    label: '2022'
-  },
-  {
-    value: '23',
-    label: '2023'
-  }
+  { value: year - 2004, label: year - 4 },
+  { value: year - 2003, label: year - 3 },
+  { value: year - 2002, label: year - 2 },
+  { value: year - 2001, label: year - 1 },
+  { value: year - 2000, label: year }
 ]
+
+// 数据处理
+// const getInfo = (instituteInfo: Institute[]) => {
+//   instituteInfo.forEach()
+// }
+
+const store = instituteStore()
+// 获取数据
+store
+  .GetInstituteInfo()
+  .then(() => {
+    // data.push(...store.instituteInfo)
+  })
+  .catch((err) => {
+    ElMessage.error(err)
+  })
 
 const collegeAndMajor = ref([])
 const collegeAndMajorOptions = [
-  {
-    value: 'resource',
-    label: 'Resource',
-    children: [
-      {
-        value: 'axure',
-        label: 'Axure Components'
-      },
-      {
-        value: 'sketch',
-        label: 'Sketch Templates'
-      },
-      {
-        value: 'docs',
-        label: 'Design Documentation'
-      }
-    ]
-  },
   {
     value: '01',
     label: '材料科学与工程学院',
@@ -164,7 +163,7 @@ const reset = () => {
       <div class="panel-bar">
         <el-card class="panel">
           <h5>生成学号初始编号</h5>
-          <div>
+          <div style="height: 60px">
             <el-select v-model="enrollmentYear" placeholder="选择入学年份" style="width: 130px">
               <el-option
                 v-for="item in enrollmentYearOptions"
@@ -258,13 +257,14 @@ const reset = () => {
   margin: 10px;
   padding: 0 30px 20px 30px;
   display: flex;
-  width: 500px;
+  width: 540px;
   height: 280px;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 .text {
   font-size: 16px;
+  margin-bottom: 30px;
 }
 .button-bar {
   display: flex;
