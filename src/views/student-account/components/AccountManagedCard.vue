@@ -87,7 +87,8 @@ const reset = () => {
     tableData.length == 0 &&
     studentId.value == '' &&
     enrollmentYear.value == '' &&
-    collegeAndMajor.value.length == 1
+    collegeAndMajor.value[0] == '' &&
+    collegeAndMajor.value[1] == undefined
   ) {
     return
   } else {
@@ -142,35 +143,47 @@ const queryByStudentId = async () => {
 }
 
 const queryByOptions = async () => {
-  loading.value = true
-  disabled.value = true
-  const studentData = {
-    studentId: collegeAndMajor.value[1]
-      ? (enrollmentYear.value ? '1' + enrollmentYear.value : '') +
-        collegeAndMajor.value[0] +
-        collegeAndMajor.value[1]
-      : (enrollmentYear.value ? '1' + enrollmentYear.value : '') + collegeAndMajor.value[0]
-  }
-  await selectStudentAccount(studentData)
-    .then((res) => {
-      if (res.data.code == 200) {
-        tableData.length = 0
-        tableData.push(...res.data.data.students)
-        ElMessage.success('查询成功！')
-        if (res.data.data.students.length == 0) {
-          ElMessage.success('查询数据为空！')
+  if (
+    enrollmentYear.value == '' &&
+    collegeAndMajor.value[0] == '' &&
+    collegeAndMajor.value[1] == undefined
+  ) {
+    ElMessage({
+      type: 'warning',
+      message: '请先选择检索条件！'
+    })
+    return
+  } else {
+    loading.value = true
+    disabled.value = true
+    const studentData = {
+      studentId: collegeAndMajor.value[1]
+        ? (enrollmentYear.value ? '1' + enrollmentYear.value : '') +
+          collegeAndMajor.value[0] +
+          collegeAndMajor.value[1]
+        : (enrollmentYear.value ? '1' + enrollmentYear.value : '') + collegeAndMajor.value[0]
+    }
+    await selectStudentAccount(studentData)
+      .then((res) => {
+        if (res.data.code == 200) {
+          tableData.length = 0
+          tableData.push(...res.data.data.students)
+          ElMessage.success('查询成功！')
+          if (res.data.data.students.length == 0) {
+            ElMessage.success('查询数据为空！')
+          }
+        } else {
+          ElMessage.error(res.data.message)
         }
-      } else {
-        ElMessage.error(res.data.message)
-      }
-    })
-    .catch((err) => {
-      ElMessage.error(err)
-    })
-    .finally(() => {
-      loading.value = false
-      disabled.value = false
-    })
+      })
+      .catch((err) => {
+        ElMessage.error(err)
+      })
+      .finally(() => {
+        loading.value = false
+        disabled.value = false
+      })
+  }
 }
 
 const multipleTableRef = ref<InstanceType<typeof ElTable>>()
@@ -275,13 +288,14 @@ const deleteAccount = async () => {
         ref="multipleTableRef"
         :data="tableData"
         v-loading="loading"
+        :default-sort="{ prop: 'studentId', order: 'ascending' }"
         element-loading-text="Loading..."
         height="600"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column label="学号">
+        <el-table-column property="studentId" label="学号" sortable>
           <template #default="scope">{{ scope.row.studentId }}</template>
         </el-table-column>
         <el-table-column property="name" label="姓名" />
