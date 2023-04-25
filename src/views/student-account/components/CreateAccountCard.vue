@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import instituteStore from '@/stores/modules/institute'
+import { it } from 'element-plus/es/locale'
 
 interface Institute {
   id: string
@@ -13,6 +14,12 @@ interface Major {
   instituteId: string
   id: string
   name: string
+}
+
+interface InfoOptions {
+  value: string
+  label: string
+  children: InfoOptions[]
 }
 
 // 生成年份
@@ -28,52 +35,39 @@ const enrollmentYearOptions = [
 ]
 
 // 数据处理
-// const getInfo = (instituteInfo: Institute[]) => {
-//   instituteInfo.forEach()
-// }
+const getInfo = (instituteInfo: Institute[]) => {
+  const result: InfoOptions[] = []
+  instituteInfo.forEach(({ id, name, major }, index) => {
+    result.push({ value: id, label: name, children: [] })
+    major.forEach((item) => {
+      result[index].children.push({
+        value: item.id,
+        label: item.name,
+        children: []
+      })
+    })
+  })
+  return result
+}
+
+const collegeAndMajor = ref([])
+const collegeAndMajorOptions: InfoOptions[] = reactive([])
 
 const store = instituteStore()
 // 获取数据
 store
   .GetInstituteInfo()
   .then(() => {
-    // data.push(...store.instituteInfo)
+    const instituteInfo = store.instituteInfo
+    collegeAndMajorOptions.push(...getInfo(instituteInfo))
+    console.log(collegeAndMajorOptions)
   })
   .catch((err) => {
     ElMessage.error(err)
   })
 
-const collegeAndMajor = ref([])
-const collegeAndMajorOptions = [
-  {
-    value: '01',
-    label: '材料科学与工程学院',
-    children: [
-      {
-        value: '06',
-        label: '粉体材料科学与工程专业'
-      }
-    ]
-  },
-  {
-    value: '06',
-    label: '信息工程学院',
-    children: [
-      {
-        value: '01',
-        label: '计算机科学与技术专业'
-      },
-      {
-        value: '03',
-        label: '信息管理与信息系统专业'
-      }
-    ]
-  }
-]
-
 const classNumber = ref(1)
 const num = ref(1)
-
 const initialStudentId = ref('')
 const generate = () => {
   if (enrollmentYear.value == '') {
