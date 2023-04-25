@@ -2,7 +2,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { reactive, ref } from 'vue'
 import instituteStore from '@/stores/modules/institute'
-import { it } from 'element-plus/es/locale'
+import { createStudentAccount } from '@/api/student'
 
 interface Institute {
   id: string
@@ -60,7 +60,6 @@ store
   .then(() => {
     const instituteInfo = store.instituteInfo
     collegeAndMajorOptions.push(...getInfo(instituteInfo))
-    console.log(collegeAndMajorOptions)
   })
   .catch((err) => {
     ElMessage.error(err)
@@ -93,12 +92,12 @@ const generate = () => {
     classNumber.value
 }
 
+// 数据处理
 const getAccountList = (initialStudentId: string, num: number) => {
   const accountList = []
-
   for (let i = 1; i <= num; i++) {
     const studentId = Number(initialStudentId + '00') + i
-    accountList.push(String(studentId))
+    accountList.push({ studentId: String(studentId) })
   }
   return accountList
 }
@@ -115,22 +114,27 @@ const createAccount = () => {
       cancelButtonText: '取消',
       type: 'warning'
     })
-      .then(() => {
-        const accountList = getAccountList(initialStudentId.value, num.value)
-
-        console.log(accountList)
-
-        ElMessage({
-          type: 'success',
-          message: '创建成功！'
-        })
-        reset()
+      .then(async () => {
+        const accountList = { accountList: getAccountList(initialStudentId.value, num.value) }
+        await createStudentAccount(accountList)
+          .then((res) => {
+            if (res.data.code == 200) {
+              ElMessage.success('创建成功！')
+            } else {
+              ElMessage.error(res.data.message)
+            }
+          })
+          .catch((err) => {
+            ElMessage.error(err)
+          })
       })
       .catch(() => {
         ElMessage({
           type: 'info',
           message: '取消创建！'
         })
+      })
+      .finally(() => {
         reset()
       })
   }
