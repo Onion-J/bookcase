@@ -3,6 +3,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { reactive, ref } from 'vue'
 import instituteStore from '@/stores/modules/institute'
 import { createStudentAccount } from '@/api/student'
+import router from '@/router'
 
 interface Institute {
   id: string
@@ -120,6 +121,7 @@ const createAccount = () => {
           .then((res) => {
             if (res.data.code == 200) {
               ElMessage.success('创建成功！')
+              router.go(0)
             } else {
               ElMessage.error(res.data.message)
             }

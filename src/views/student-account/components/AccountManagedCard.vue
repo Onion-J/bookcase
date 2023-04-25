@@ -1,12 +1,176 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ElTable } from 'element-plus'
+import { reactive, ref } from 'vue'
+import { ElMessage, ElTable } from 'element-plus'
 import { Search, CloseBold } from '@element-plus/icons-vue'
+import instituteStore from '@/stores/modules/institute'
+import { getEnrollmentYear, selectStudentAccount, deleteStudentAccount } from '@/api/student'
 
 interface Student {
   studentId: string
   name: string
   phone: string
+}
+
+interface Institute {
+  id: string
+  name: string
+  major: Major[]
+}
+
+interface Major {
+  instituteId: string
+  id: string
+  name: string
+}
+
+interface InfoOptions {
+  value: string
+  label: string
+  children: InfoOptions[]
+}
+
+// 获取可选择的入学年份
+getEnrollmentYear()
+  .then((res) => {
+    if (res.data.code == 200) {
+      res.data.data.enrollmentYearList.forEach((item: string) => {
+        enrollmentYearOptions.push({ value: item, label: '20' + item, children: [] })
+      })
+    } else {
+      ElMessage.error(res.data.message)
+    }
+  })
+  .catch((err) => {
+    ElMessage.error(err)
+  })
+
+const store = instituteStore()
+// 获取可选择的学院及专业
+store
+  .GetInstituteInfo()
+  .then(() => {
+    const instituteInfo = store.instituteInfo
+    collegeAndMajorOptions.push(...getInfo(instituteInfo))
+  })
+  .catch((err) => {
+    ElMessage.error(err)
+  })
+
+// 数据处理
+const getInfo = (instituteInfo: Institute[]) => {
+  const result: InfoOptions[] = []
+  instituteInfo.forEach(({ id, name, major }, index) => {
+    result.push({ value: id, label: name, children: [] })
+    major.forEach((item) => {
+      result[index].children.push({
+        value: item.id,
+        label: item.name,
+        children: []
+      })
+    })
+  })
+  return result
+}
+
+const enrollmentYear = ref('')
+let enrollmentYearOptions: InfoOptions[] = reactive([])
+
+const collegeAndMajor = ref([''])
+const collegeAndMajorOptions: InfoOptions[] = reactive([])
+
+const tableData: Student[] = reactive([])
+
+const loading = ref(false)
+const disabled = ref(false)
+const reset = () => {
+  if (
+    tableData.length == 0 &&
+    studentId.value == '' &&
+    enrollmentYear.value == '' &&
+    collegeAndMajor.value.length == 1
+  ) {
+    return
+  } else {
+    loading.value = true
+    disabled.value = true
+    studentId.value = ''
+    enrollmentYear.value = ''
+    collegeAndMajor.value = ['']
+    tableData.length = 0
+    setTimeout(() => {
+      loading.value = false
+      disabled.value = false
+    }, 1000)
+  }
+}
+
+const studentId = ref('')
+const queryByStudentId = async () => {
+  if (studentId.value.length != 12) {
+    ElMessage({
+      type: 'warning',
+      message: '请输入完整的学号！'
+    })
+    return
+  } else {
+    loading.value = true
+    disabled.value = true
+    const studentData = {
+      studentId: studentId.value
+    }
+    await selectStudentAccount(studentData)
+      .then((res) => {
+        if (res.data.code == 200) {
+          tableData.length = 0
+          tableData.push(...res.data.data.students)
+          ElMessage.success('查询成功！')
+          if (res.data.data.students.length == 0) {
+            ElMessage.success('查询数据为空！')
+          }
+        } else {
+          ElMessage.error(res.data.message)
+        }
+      })
+      .catch((err) => {
+        ElMessage.error(err)
+      })
+      .finally(() => {
+        loading.value = false
+        disabled.value = false
+      })
+  }
+}
+
+const queryByOptions = async () => {
+  loading.value = true
+  disabled.value = true
+  const studentData = {
+    studentId: collegeAndMajor.value[1]
+      ? (enrollmentYear.value ? '1' + enrollmentYear.value : '') +
+        collegeAndMajor.value[0] +
+        collegeAndMajor.value[1]
+      : (enrollmentYear.value ? '1' + enrollmentYear.value : '') + collegeAndMajor.value[0]
+  }
+  await selectStudentAccount(studentData)
+    .then((res) => {
+      if (res.data.code == 200) {
+        tableData.length = 0
+        tableData.push(...res.data.data.students)
+        ElMessage.success('查询成功！')
+        if (res.data.data.students.length == 0) {
+          ElMessage.success('查询数据为空！')
+        }
+      } else {
+        ElMessage.error(res.data.message)
+      }
+    })
+    .catch((err) => {
+      ElMessage.error(err)
+    })
+    .finally(() => {
+      loading.value = false
+      disabled.value = false
+    })
 }
 
 const multipleTableRef = ref<InstanceType<typeof ElTable>>()
@@ -16,135 +180,34 @@ const handleSelectionChange = (val: Student[]) => {
   multipleSelection.value = val
 }
 
-const enrollmentYear = ref('')
-const enrollmentYearOptions = [
-  {
-    value: '19',
-    label: '2019'
-  },
-  {
-    value: '20',
-    label: '2020'
-  },
-  {
-    value: '21',
-    label: '2021'
-  },
-  {
-    value: '22',
-    label: '2022'
-  },
-  {
-    value: '23',
-    label: '2023'
-  }
-]
-
-const collegeAndMajor = ref([])
-const collegeAndMajorOptions = [
-  {
-    value: '01',
-    label: '材料科学与工程学院',
-    children: [
-      {
-        value: '06',
-        label: '粉体材料科学与工程专业'
-      }
-    ]
-  },
-  {
-    value: '06',
-    label: '信息工程学院',
-    children: [
-      {
-        value: '01',
-        label: '计算机科学与技术专业'
-      },
-      {
-        value: '03',
-        label: '信息管理与信息系统专业'
-      }
-    ]
-  }
-]
-
-const tableData = ref<Student[]>([
-  // {
-  //   studentId: '119060300216',
-  //   name: '揭洋',
-  //   phone: '13407075265'
-  // },
-  // {
-  //   studentId: '119060300216',
-  //   name: '揭洋',
-  //   phone: '13407075265'
-  // },
-  // {
-  //   studentId: '119060300216',
-  //   name: '揭洋',
-  //   phone: '13407075265'
-  // },
-  // {
-  //   studentId: '119060300216',
-  //   name: '揭洋',
-  //   phone: '13407075265'
-  // },
-  // {
-  //   studentId: '119060300216',
-  //   name: '揭洋',
-  //   phone: '13407075265'
-  // },
-  // {
-  //   studentId: '119060300216',
-  //   name: '揭洋',
-  //   phone: '13407075265'
-  // },
-  // {
-  //   studentId: '119060300216',
-  //   name: '揭洋',
-  //   phone: '13407075265'
-  // }
-])
-
-const studentId = ref('')
-const queryByStudentId = () => {
-  if (studentId.value == '') {
-    return
-  } else {
-    console.log(studentId.value)
-    refresh()
-  }
-}
-const studentIdChanged = () => {
-  if (studentId.value == '') {
-    reset()
-  }
-}
-
-const queryByOptions = () => {}
-
-const deleteAccount = () => {}
-
-const loading = ref(false)
-const disabled = ref(false)
-const refresh = () => {
-  loading.value = true
-  disabled.value = true
-  setTimeout(() => {
-    loading.value = false
-    disabled.value = false
-  }, 3000)
-}
-const reset = () => {
-  if (tableData.value.length == 0) {
-    return
+const deleteAccount = async () => {
+  if (multipleSelection.value.length == 0) {
+    ElMessage({
+      type: 'warning',
+      message: '请先选择需要删除的账户！'
+    })
   } else {
     loading.value = true
     disabled.value = true
-    setTimeout(() => {
-      loading.value = false
-      disabled.value = false
-    }, 1000)
+    const studentData = {
+      accountList: multipleSelection.value
+    }
+    await deleteStudentAccount(studentData)
+      .then((res) => {
+        if (res.data.code == 200) {
+          tableData.length = 0
+          ElMessage.success('删除成功！')
+        } else {
+          ElMessage.error(res.data.message)
+        }
+      })
+      .catch((err) => {
+        ElMessage.error(err)
+      })
+      .finally(() => {
+        loading.value = false
+        disabled.value = false
+      })
   }
 }
 </script>
@@ -165,7 +228,6 @@ const reset = () => {
           :prefix-icon="Search"
           :disabled="disabled"
           maxlength="12"
-          @change="studentIdChanged"
           style="width: 240px; margin-right: 20px"
         >
           <template #append>
@@ -224,6 +286,9 @@ const reset = () => {
         </el-table-column>
         <el-table-column property="name" label="姓名" />
         <el-table-column property="phone" label="手机" show-overflow-tooltip />
+        <template #empty>
+          <img src="@/assets/placeholder_images/nodata.png" alt="暂无数据" style="width: inherit" />
+        </template>
       </el-table>
     </el-card>
   </div>
