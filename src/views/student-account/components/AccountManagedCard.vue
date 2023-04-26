@@ -122,6 +122,8 @@ const queryByStudentId = async () => {
     await selectStudentAccount(studentData)
       .then((res) => {
         if (res.data.code == 200) {
+          enrollmentYear.value = ''
+          collegeAndMajor.value = ['']
           tableData.length = 0
           tableData.push(...res.data.data.students)
           ElMessage.success('查询成功！')
@@ -166,6 +168,7 @@ const queryByOptions = async () => {
     await selectStudentAccount(studentData)
       .then((res) => {
         if (res.data.code == 200) {
+          studentId.value = ''
           tableData.length = 0
           tableData.push(...res.data.data.students)
           ElMessage.success('查询成功！')
