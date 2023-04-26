@@ -441,13 +441,13 @@ const areaChanged = () => {
 const queryByAreaAndSequenceNumber = () => {
   if (areaValue.value == '') {
     ElMessage({
-      message: '请选择图书柜区域！',
+      message: '请选择储物柜区域！',
       type: 'warning'
     })
   } else {
     if (sequenceNumberValue.value == '') {
       ElMessage({
-        message: '请选择图书柜号码！',
+        message: '请选择储物柜号码！',
         type: 'warning'
       })
     } else {
@@ -490,14 +490,14 @@ const reset = () => {
       <div class="card-header">
         <div class="card-title">
           <el-icon><Tickets /></el-icon>
-          <h6 class="title">图书柜使用记录</h6>
+          <h6 class="title">储物柜使用记录</h6>
         </div>
         <div class="flex-grow" />
 
         <div class="query-contaniner">
           <el-select
             v-model="areaValue"
-            placeholder="选择图书柜区域"
+            placeholder="选择储物柜区域"
             :disabled="disabled"
             @change="areaChanged"
           >
@@ -506,8 +506,8 @@ const reset = () => {
 
           <el-select
             v-model="sequenceNumberValue"
-            placeholder="选择图书柜号码"
-            no-data-text="请先选择图书柜区域！"
+            placeholder="选择储物柜号码"
+            no-data-text="请先选择储物柜区域！"
             :disabled="disabled"
           >
             <el-option

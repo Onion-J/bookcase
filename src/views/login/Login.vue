@@ -91,7 +91,7 @@ const checkCapslock = (event: KeyboardEvent) => {
     >
       <!-- 标题 -->
       <div class="title-container">
-        <h3 class="title">高校图书馆图书柜管理系统</h3>
+        <h3 class="title">高校图书馆储物柜管理系统</h3>
       </div>
       <!-- 用户名 -->
       <el-form-item prop="username">

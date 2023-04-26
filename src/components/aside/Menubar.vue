@@ -22,7 +22,7 @@ const isAdmin = userStore.userInfo.isAdmin
     </el-menu-item>
     <el-menu-item index="/cabinet">
       <el-icon><Menu /></el-icon>
-      <span>图书柜管理</span>
+      <span>储物柜管理</span>
     </el-menu-item>
     <el-menu-item index="/student">
       <el-icon><UserFilled /></el-icon>

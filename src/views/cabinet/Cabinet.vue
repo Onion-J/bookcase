@@ -20,7 +20,7 @@ import CabinetQueryCard from './components/CabinetQueryCard.vue'
         <el-main style="background-color: #f2f3f5; padding-bottom: 30px">
           <el-scrollbar>
             <div>
-              <h1 class="title">丨图书柜管理</h1>
+              <h1 class="title">丨储物柜管理</h1>
             </div>
             <CabinetAreaCard />
             <CabinetUsageCard />

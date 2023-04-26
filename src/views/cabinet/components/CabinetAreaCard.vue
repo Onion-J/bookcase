@@ -11,13 +11,13 @@ import {
   renameBookcase
 } from '@/api/bookcase'
 
-// 单个图书柜信息
+// 单个储物柜信息
 interface Bookcase {
   area: string
   sequenceNumber: number
   occupied: boolean
 }
-// 图书柜信息总览
+// 储物柜信息总览
 interface BookcaseInfo {
   area: string
   used: number
@@ -55,7 +55,7 @@ const getBookcaseAreaList = (bookcase: Bookcase[]) => {
 
   return Object.entries(result).map(([key, value]) => ({ area: key, ...value }))
 }
-// 获取后端图书柜数据
+// 获取后端储物柜数据
 const store = bookcaseStore()
 store
   .GetBookcaseInfo()
@@ -106,9 +106,9 @@ const openPop = (formEl: FormInstance | undefined) => {
 
 // 编辑的数量
 const changeNumber = ref(1)
-// click 增加图书柜数量 弹出框
+// click 增加储物柜数量 弹出框
 const addCabinet = (index: number, row: BookcaseInfo) => {
-  ElMessageBox.confirm('此编辑将会添加该区域图书柜，是否继续?', 'Warning', {
+  ElMessageBox.confirm('此编辑将会添加该区域储物柜，是否继续?', 'Warning', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'
@@ -136,9 +136,9 @@ const addCabinet = (index: number, row: BookcaseInfo) => {
       changeNumber.value = 1
     })
 }
-// click 删减图书柜数量 弹出框
+// click 删减储物柜数量 弹出框
 const reduceCabinet = (index: number, row: BookcaseInfo) => {
-  ElMessageBox.confirm('此编辑将会删减该区域图书柜，是否继续?', 'Warning', {
+  ElMessageBox.confirm('此编辑将会删减该区域储物柜，是否继续?', 'Warning', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'
@@ -177,7 +177,7 @@ const modifyAreaName = (formEl: FormInstance | undefined, index: number, row: Bo
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      ElMessageBox.confirm('修改图书柜区域名称，是否继续?', 'Warning', {
+      ElMessageBox.confirm('修改储物柜区域名称，是否继续?', 'Warning', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning'
@@ -238,7 +238,7 @@ const addArea = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      ElMessageBox.confirm('添加图书柜区域，是否继续?', 'Warning', {
+      ElMessageBox.confirm('添加储物柜区域，是否继续?', 'Warning', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning'
@@ -292,7 +292,7 @@ const cancelDeleteArea = () => {
 // click 确认 删除区域 对话框
 const deleteArea = () => {
   if (checkedArea.value.length !== 0) {
-    ElMessageBox.confirm('删除图书柜区域，是否继续?', 'Warning', {
+    ElMessageBox.confirm('删除储物柜区域，是否继续?', 'Warning', {
       confirmButtonText: '确认',
       cancelButtonText: '取消',
       type: 'warning'
@@ -334,7 +334,7 @@ const deleteArea = () => {
       <div class="card-header">
         <div class="card-title">
           <el-icon><DataAnalysis /></el-icon>
-          <h6 class="title">图书柜使用情况</h6>
+          <h6 class="title">储物柜使用情况</h6>
         </div>
         <div class="flex-grow" />
         <el-button
@@ -345,8 +345,8 @@ const deleteArea = () => {
           @click="openAddDialog(cabinetAreaFormRef)"
         />
 
-        <!-- 添加图书柜区域对话框 -->
-        <el-dialog v-model="addCabinetAreaFormVisible" title="添加图书柜区域">
+        <!-- 添加储物柜区域对话框 -->
+        <el-dialog v-model="addCabinetAreaFormVisible" title="添加储物柜区域">
           <el-form ref="cabinetAreaFormRef" :model="cabinetAreaForm">
             <el-form-item
               label="区域名称"
@@ -356,7 +356,7 @@ const deleteArea = () => {
             >
               <el-input v-model="cabinetAreaForm.area" type="text" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="图书柜总数" :label-width="120">
+            <el-form-item label="储物柜总数" :label-width="120">
               <el-input-number
                 v-model="cabinetAreaForm.totalNumber"
                 :min="1"
@@ -372,7 +372,7 @@ const deleteArea = () => {
             </span>
           </template>
         </el-dialog>
-        <!-- 添加图书柜区域对话框 -->
+        <!-- 添加储物柜区域对话框 -->
 
         <el-button
           type="danger"
@@ -382,8 +382,8 @@ const deleteArea = () => {
           @click="openDeleteDialog"
         />
 
-        <!-- 删除图书柜区域对话框 -->
-        <el-dialog v-model="deleteCabinetAreaFormVisible" title="删除图书柜区域">
+        <!-- 删除储物柜区域对话框 -->
+        <el-dialog v-model="deleteCabinetAreaFormVisible" title="删除储物柜区域">
           <el-checkbox-group v-model="checkedArea">
             <el-checkbox v-for="area in areaList" :key="area.value" :label="area.text" />
           </el-checkbox-group>
@@ -394,12 +394,12 @@ const deleteArea = () => {
             </span>
           </template>
         </el-dialog>
-        <!-- 删除图书柜区域对话框 -->
+        <!-- 删除储物柜区域对话框 -->
 
         <el-button :disabled="disabled" :icon="Refresh" @click="refresh" />
       </div>
 
-      <!-- 图书柜情况表格 -->
+      <!-- 储物柜情况表格 -->
       <el-table
         v-loading="refershLoading"
         element-loading-text="Loading..."
@@ -411,8 +411,8 @@ const deleteArea = () => {
         <el-table-column prop="area" label="区域" :filters="areaList" :filter-method="filterArea" />
         <el-table-column prop="used" label="使用数" />
         <el-table-column prop="unused" label="空闲数" />
-        <el-table-column prop="cabinetNumber" label="图书柜总数" sortable />
-        <el-table-column label="编辑图书柜">
+        <el-table-column prop="cabinetNumber" label="储物柜总数" sortable />
+        <el-table-column label="编辑储物柜">
           <template #default="scope">
             <el-popover :width="260" placement="right" trigger="click">
               <template #reference>
@@ -423,7 +423,7 @@ const deleteArea = () => {
                 />
               </template>
               <el-form>
-                <p>编辑该区域图书柜数量</p>
+                <p>编辑该区域储物柜数量</p>
                 <el-form-item label="数量">
                   <el-input-number
                     v-model="changeNumber"
@@ -480,7 +480,7 @@ const deleteArea = () => {
           <img src="@/assets/placeholder_images/nodata.png" alt="暂无数据" style="width: inherit" />
         </template>
       </el-table>
-      <!-- 图书柜情况表格 -->
+      <!-- 储物柜情况表格 -->
     </el-card>
   </div>
 </template>

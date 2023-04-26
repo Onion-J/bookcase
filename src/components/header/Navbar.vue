@@ -38,7 +38,7 @@ const SetFullScreen = () => {
 <template>
   <div class="header">
     <div class="title-container">
-      <h5 class="title">高校图书馆图书柜管理系统</h5>
+      <h5 class="title">高校图书馆储物柜管理系统</h5>
     </div>
     <div class="flex-grow" />
     <el-button @click="SetFullScreen" :icon="FullScreen" />

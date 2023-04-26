@@ -426,12 +426,12 @@ const changeSelect = () => {
       <div class="card-header">
         <div class="card-title">
           <el-icon><Memo /></el-icon>
-          <h6 class="title">图书柜当前使用详情</h6>
+          <h6 class="title">储物柜当前使用详情</h6>
         </div>
         <div class="flex-grow" />
         <el-select
           v-model="areaValue"
-          placeholder="选择图书柜区域"
+          placeholder="选择储物柜区域"
           :disabled="disabled"
           @change="changeSelect"
           style="margin-right: 20px"

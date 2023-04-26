@@ -11,6 +11,7 @@ import {
   setAdmin,
   unlockedAccount
 } from '@/api/user'
+import router from '@/router'
 
 interface User {
   teacherId: string
@@ -195,7 +196,7 @@ const setAdminRole = (row: User) => {
         .then((res) => {
           if (res.data.code == 200) {
             ElMessage.success('设置成功！')
-            refresh()
+            router.go(0)
           } else {
             ElMessage.error(res.data.message)
           }
