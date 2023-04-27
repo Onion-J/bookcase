@@ -1,410 +1,72 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { getNotExpiredApplication } from '@/api/application'
 import { Refresh } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+
+interface Application {
+  studentId: string
+  name: string
+  area: string
+  sequenceNumber: number
+  startDate: string
+  endDate: string
+  createAt: string
+}
+
+const usedRecord: Application[] = reactive([])
+// 筛选区域信息列表
+const areaList: string[] = reactive([])
+const areaValue = ref()
+
+getNotExpiredApplication()
+  .then((res) => {
+    if (res.data.code == 200) {
+      usedRecord.push(...res.data.data.applyList)
+      areaList.push(
+        ...usedRecord
+          .map((item) => item.area)
+          .filter((item, index, arr) => {
+            return arr.indexOf(item, 0) === index
+          })
+      )
+    } else {
+      ElMessage.error(res.data.message)
+    }
+  })
+  .catch((err) => {
+    ElMessage.error(err)
+  })
 
 const refershLoading = ref(false)
 const disabled = ref(false)
-const refresh = () => {
+const refresh = async () => {
   refershLoading.value = true
   disabled.value = true
-  setTimeout(() => {
-    refershLoading.value = false
-    disabled.value = false
-  }, 3000)
+  await getNotExpiredApplication()
+    .then((res) => {
+      if (res.data.code == 200) {
+        usedRecord.length = 0
+        usedRecord.push(...res.data.data.applyList)
+        areaList.length = 0
+        areaList.push(
+          ...usedRecord
+            .map((item) => item.area)
+            .filter((item, index, arr) => {
+              return arr.indexOf(item, 0) === index
+            })
+        )
+        ElMessage.success('数据刷新成功！')
+      } else {
+        ElMessage.error(res.data.message)
+      }
+    })
+    .catch((err) => {
+      ElMessage.error(err)
+    })
+  refershLoading.value = false
+  disabled.value = false
 }
-
-const areaOptions = ['崇德区', '季红区', '湘湖区']
-const areaValue = ref(areaOptions[0])
-
-const usedRecord = [
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '翠湖区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '季红区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:44'
-  }
-]
 
 const getTableData = usedRecord.filter((item) => {
   return item.area == areaValue.value
@@ -439,7 +101,7 @@ const changeSelect = () => {
           <template #prefix>
             <el-icon style="color: var(--el-color-primary); font-size: 16px"><Filter /></el-icon>
           </template>
-          <el-option v-for="item in areaOptions" :key="item" :label="item" :value="item" />
+          <el-option v-for="item in areaList" :key="item" :label="item" :value="item" />
         </el-select>
         <el-button :disabled="disabled" :icon="Refresh" @click="refresh" />
       </div>

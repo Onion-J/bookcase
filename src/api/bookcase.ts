@@ -2,7 +2,7 @@ import { request } from '@/utils/request'
 
 const url = '/bookcase'
 
-// 获取图书柜情况
+// 获取储物柜情况
 export function getBookcaseInfo() {
   return request({
     url: url + '/getBookcaseInfo',
@@ -10,7 +10,7 @@ export function getBookcaseInfo() {
   })
 }
 
-// 创建图书柜
+// 创建储物柜
 export function createBookcase(data: object) {
   return request({
     url: url + '/createBookcase',
@@ -19,7 +19,7 @@ export function createBookcase(data: object) {
   })
 }
 
-// 删除图书柜
+// 删除储物柜
 export function deleteBookcase(data: object) {
   return request({
     url: url + '/deleteBookcase',
@@ -28,7 +28,7 @@ export function deleteBookcase(data: object) {
   })
 }
 
-// 添加图书柜
+// 添加储物柜
 export function addBookcase(data: object) {
   return request({
     url: url + '/addBookcase',
@@ -37,7 +37,7 @@ export function addBookcase(data: object) {
   })
 }
 
-// 删减图书柜
+// 删减储物柜
 export function reduceBookcase(data: object) {
   return request({
     url: url + '/reduceBookcase',
@@ -46,7 +46,7 @@ export function reduceBookcase(data: object) {
   })
 }
 
-// 修改图书柜区域名称
+// 修改储物柜区域名称
 export function renameBookcase(data: object) {
   return request({
     url: url + '/renameBookcase',

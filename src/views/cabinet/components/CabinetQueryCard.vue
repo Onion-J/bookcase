@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { CloseBold } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
+import { ElMessage, valueEquals } from 'element-plus'
+import { reactive, ref } from 'vue'
+import { getUsageRecords } from '@/api/application'
+import bookcaseStore from '@/stores/modules/bookcase'
 
 interface Application {
   studentId: string
@@ -13,432 +15,59 @@ interface Application {
   createdAt: string
 }
 
-const tableData = ref<Application[]>([
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '翠湖区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '崇德区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:00'
-  },
-  {
-    studentId: '119060300216',
-    name: '揭洋',
-    area: '季红区',
-    sequenceNumber: 1,
-    startDate: '2023/4/15',
-    endDate: '2023/5/15',
-    createdAt: '2023/4/14 23:00:44'
-  }
-])
-
-// 获取区域，返回区域数组
-let getArealist = tableData.value.map((item) => {
-  return item.area
-})
-
-// 生成选择区域数组
-let areaListObject = getArealist.reduce((prev: any, next: string) => {
-  // prev.push({})
-  prev[next] = prev[next] + 1 || 1
-  return prev
-}, [])
-
-const areaValue = ref('')
-const areaOptions = Object.keys(areaListObject)
-
-let getSequenceNumberList = (selectArea: string) => {
-  const sequenceNumberList: number[] = []
-  let length = areaListObject[selectArea]
-  for (let i = 1; i <= length; i++) {
-    sequenceNumberList.push(i)
-  }
-  return sequenceNumberList
+// 单个储物柜信息
+interface Bookcase {
+  area: string
+  sequenceNumber: number
+  occupied: boolean
 }
 
+const tableData: Application[] = reactive([])
+
+const bookcaseInfoList: { [key: string]: number[] } = reactive({})
+
+// 获取后端储物柜数据
+const store = bookcaseStore()
+store
+  .GetBookcaseInfo()
+  .then(() => {
+    const bookcaseList = store.bookcaseList
+
+    areaOptions.push(
+      ...bookcaseList
+        .map((item: Application) => item.area)
+        .filter((item, index, arr) => {
+          return arr.indexOf(item, 0) === index
+        })
+    )
+    bookcaseList.forEach((item: Bookcase) => {
+      if (bookcaseInfoList[item.area]) {
+        bookcaseInfoList[item.area].push(item.sequenceNumber)
+      } else {
+        bookcaseInfoList[item.area] = [item.sequenceNumber]
+      }
+    })
+  })
+  .catch((err) => {
+    ElMessage.error(err)
+  })
+
+const areaValue = ref('')
+const areaOptions: string[] = reactive([])
+
 const sequenceNumberValue = ref('')
-const sequenceNumberOptions = ref<number[]>([])
+const sequenceNumberOptions: number[] = reactive([])
 
 const areaChanged = () => {
   if (areaValue.value == '') {
     return
   } else {
-    sequenceNumberOptions.value = getSequenceNumberList(areaValue.value)
+    sequenceNumberOptions.length = 0
+    sequenceNumberOptions.push(...bookcaseInfoList[areaValue.value])
   }
 }
 
-const queryByAreaAndSequenceNumber = () => {
+const queryByAreaAndSequenceNumber = async () => {
   if (areaValue.value == '') {
     ElMessage({
       message: '请选择储物柜区域！',
@@ -451,24 +80,35 @@ const queryByAreaAndSequenceNumber = () => {
         type: 'warning'
       })
     } else {
-      console.log(areaValue.value, sequenceNumberValue.value)
-      refresh()
+      loading.value = true
+      disabled.value = true
+      const cabinet = {
+        area: areaValue.value,
+        sequenceNumber: sequenceNumberValue.value
+      }
+      await getUsageRecords(cabinet)
+        .then((res) => {
+          if (res.data.code == 200) {
+            tableData.length = 0
+            tableData.push(...res.data.data.applyList)
+            ElMessage.success('检索成功！')
+          } else {
+            ElMessage.error(res.data.message)
+          }
+        })
+        .catch((err) => {
+          ElMessage.error(err)
+        })
+      loading.value = false
+      disabled.value = false
     }
   }
 }
 
 const loading = ref(false)
 const disabled = ref(false)
-const refresh = () => {
-  loading.value = true
-  disabled.value = true
-  setTimeout(() => {
-    loading.value = false
-    disabled.value = false
-  }, 3000)
-}
 const reset = () => {
-  if (tableData.value.length == 0) {
+  if (tableData.length == 0) {
     return
   } else {
     loading.value = true
@@ -476,7 +116,7 @@ const reset = () => {
     setTimeout(() => {
       areaValue.value = ''
       sequenceNumberValue.value = ''
-      tableData.value = []
+      tableData.length = 0
       loading.value = false
       disabled.value = false
     }, 1000)
