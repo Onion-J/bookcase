@@ -26,3 +26,11 @@ export function getUsageRecords(data: object) {
     data: data
   })
 }
+
+// 获取昨天的申请总数
+export function getYesterdayNumber() {
+  return request({
+    url: url + '/getYesterdayNumber',
+    method: 'get'
+  })
+}

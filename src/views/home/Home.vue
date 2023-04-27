@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import Navbar from '@/components/header/Navbar.vue'
 import Menubar from '@/components/aside/Menubar.vue'
-import Card from './components/Card.vue'
 import ApplicationCard from './components/ApplicationCard.vue'
 import ApplicationQueryCard from './components/ApplicationQueryCard.vue'
+import ApplicationEcharts from './components/ApplicationEcharts.vue'
+import UsageEcharts from './components/UsageEcharts.vue'
 </script>
 
 <template>
@@ -22,7 +23,8 @@ import ApplicationQueryCard from './components/ApplicationQueryCard.vue'
             <div>
               <h1 class="title">丨管理概览</h1>
             </div>
-            <Card />
+            <ApplicationEcharts />
+            <UsageEcharts />
             <div>
               <h1 class="title">丨最新动态</h1>
             </div>
