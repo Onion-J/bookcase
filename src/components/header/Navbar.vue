@@ -19,7 +19,7 @@ const logout = () => {
   router.replace({
     path: '/login'
   })
-  ElMessage.success('退出登陆成功！')
+  ElMessage.success('退出登录成功！')
 }
 
 const SetFullScreen = () => {

@@ -355,7 +355,7 @@ const rules = reactive<FormRules>({
           v-loading="refershLoading"
           element-loading-text="Loading..."
           accordion
-          style="max-height: 500px"
+          style="height: 500px"
         >
           <el-collapse-item
             v-for="(items, index) in data"

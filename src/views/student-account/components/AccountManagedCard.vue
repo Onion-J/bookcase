@@ -33,9 +33,13 @@ interface InfoOptions {
 getEnrollmentYear()
   .then((res) => {
     if (res.data.code == 200) {
-      res.data.data.enrollmentYearList.forEach((item: string) => {
-        enrollmentYearOptions.push({ value: item, label: '20' + item, children: [] })
-      })
+      if (res.data.data.enrollmentYearList !== null) {
+        res.data.data.enrollmentYearList.forEach((item: string) => {
+          enrollmentYearOptions.push({ value: item, label: '20' + item, children: [] })
+        })
+      } else {
+        enrollmentYearOptions.length = 0
+      }
     } else {
       ElMessage.error(res.data.message)
     }
