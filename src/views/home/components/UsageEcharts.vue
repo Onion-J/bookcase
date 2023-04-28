@@ -3,6 +3,47 @@ import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import type { Ref } from 'vue'
 import type { ECharts, EChartsOption } from 'echarts'
 import { init } from 'echarts'
+import bookcaseStore from '@/stores/modules/bookcase'
+import { ElMessage } from 'element-plus'
+
+// 单个储物柜信息
+interface Bookcase {
+  area: string
+  sequenceNumber: number
+  occupied: boolean
+}
+
+// 数据
+const data: { name: string; value: number }[] = reactive([])
+
+// 获取后端储物柜数据
+const store = bookcaseStore()
+store
+  .GetBookcaseInfo()
+  .then(() => {
+    const bookcaseList = store.bookcaseList
+    // 表格数据
+    data.push(...getBookcaseAreaList(bookcaseList))
+  })
+  .catch((err) => {
+    ElMessage.error(err)
+  })
+
+// 对后端数据进行处理
+const getBookcaseAreaList = (bookcase: Bookcase[]) => {
+  const result: Record<string, any> = {}
+  bookcase.forEach((item) => {
+    if (result[item.area]) {
+      result[item.area] = item.occupied
+        ? { value: result[item.area].value + 1 }
+        : { value: result[item.area].value }
+    } else {
+      result[item.area] = item.occupied ? { value: 1 } : { value: 0 }
+    }
+  })
+
+  return Object.entries(result).map(([key, value]) => ({ name: key, ...value }))
+}
 
 let chart: ECharts
 const chartRef: Ref<HTMLElement | null> = ref(null)
@@ -11,24 +52,8 @@ const initChart = () => {
   const option: EChartsOption = {
     series: [
       {
-        name: 'Nightingale Chart',
         type: 'pie',
-        radius: [50, 250],
-        center: ['50%', '50%'],
-        roseType: 'area',
-        itemStyle: {
-          borderRadius: 8
-        },
-        data: [
-          { value: 40, name: 'rose 1' },
-          { value: 38, name: 'rose 2' },
-          { value: 32, name: 'rose 3' },
-          { value: 30, name: 'rose 4' },
-          { value: 28, name: 'rose 5' },
-          { value: 26, name: 'rose 6' },
-          { value: 22, name: 'rose 7' },
-          { value: 18, name: 'rose 8' }
-        ]
+        roseType: 'area'
       }
     ]
   }
@@ -37,26 +62,28 @@ const initChart = () => {
 // 更新图表
 const updateChart = () => {
   const option: EChartsOption = {
+    tooltip: {
+      trigger: 'item'
+    },
     series: [
       {
-        name: 'Nightingale Chart',
         type: 'pie',
-        radius: [50, 250],
+        radius: [25, 125],
         center: ['50%', '50%'],
         roseType: 'area',
         itemStyle: {
-          borderRadius: 8
+          borderRadius: data.length
         },
-        data: [
-          { value: 40, name: 'rose 1' },
-          { value: 38, name: 'rose 2' },
-          { value: 32, name: 'rose 3' },
-          { value: 30, name: 'rose 4' },
-          { value: 28, name: 'rose 5' },
-          { value: 26, name: 'rose 6' },
-          { value: 22, name: 'rose 7' },
-          { value: 18, name: 'rose 8' }
-        ]
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 16,
+            fontWeight: 'bold'
+          }
+        },
+        data: data.sort((a, b) => {
+          return a.value - b.value
+        })
       }
     ]
   }
@@ -115,7 +142,7 @@ onUnmounted(() => {
 }
 
 .chart {
-  width: 100%;
-  height: 500px;
+  width: 600px;
+  height: 300px;
 }
 </style>

@@ -23,8 +23,10 @@ import UsageEcharts from './components/UsageEcharts.vue'
             <div>
               <h1 class="title">丨管理概览</h1>
             </div>
-            <ApplicationEcharts />
-            <UsageEcharts />
+            <div class="Echarts-bar">
+              <ApplicationEcharts />
+              <UsageEcharts />
+            </div>
             <div>
               <h1 class="title">丨最新动态</h1>
             </div>
@@ -57,5 +59,9 @@ import UsageEcharts from './components/UsageEcharts.vue'
   width: 500px;
   user-select: none;
   cursor: default;
+}
+.Echarts-bar {
+  display: flex;
+  justify-content: center;
 }
 </style>
