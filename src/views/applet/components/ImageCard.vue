@@ -5,6 +5,8 @@ import { reactive, ref } from 'vue'
 import { deleteImg, getSlide } from '@/api/slide'
 import { ElMessage, ElMessageBox, type UploadInstance, type UploadProps } from 'element-plus'
 
+const uploadUrl = import.meta.env.VITE_APP_API_BASEURL + '/uploadImg'
+
 const store = userStore()
 
 const imgUrlList: string[] = reactive([])
@@ -100,7 +102,7 @@ const imgDelete = () => {
         <div class="flex-grow" />
         <el-upload
           ref="upload"
-          action="http://127.0.0.1:1016/api/uploadImg"
+          :action="uploadUrl"
           :headers="{ Authorization: `Bearer ${store.token}` }"
           :on-success="handleSuccess"
           style="width: 380px; height: 32px"

@@ -99,7 +99,7 @@ onMounted(() => {
     updateChart()
   }, 2000)
   // 添加定时器，每隔5秒重新渲染图表
-  interval = setInterval(() => {
+  interval = window.setInterval(() => {
     chart.clear()
     initChart()
     updateChart()

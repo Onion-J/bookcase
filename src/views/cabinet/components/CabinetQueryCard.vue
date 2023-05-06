@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CloseBold } from '@element-plus/icons-vue'
-import { ElMessage, valueEquals } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { reactive, ref } from 'vue'
 import { getUsageRecords } from '@/api/application'
 import bookcaseStore from '@/stores/modules/bookcase'
