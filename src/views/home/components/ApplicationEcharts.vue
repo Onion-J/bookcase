@@ -6,15 +6,23 @@ import { init } from 'echarts'
 import { getYesterdayNumber } from '@/api/application'
 import { ElMessage } from 'element-plus'
 
-const dateList = [
-  ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + (new Date().getDate() - 7),
-  ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + (new Date().getDate() - 6),
-  ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + (new Date().getDate() - 5),
-  ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + (new Date().getDate() - 4),
-  ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + (new Date().getDate() - 3),
-  ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + (new Date().getDate() - 2),
-  ('0' + (new Date().getMonth() + 1)).slice(-2) + '-' + (new Date().getDate() - 1)
-]
+function getLastSevenDays(): string[] {
+    const today = new Date(); 
+    // 生成最近7天的日期数组
+    const lastSevenDays = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        return date;
+    });
+    // 格式化日期为YYYY-MM-DD
+    return lastSevenDays.map(date => {
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${month}-${day}`;
+    });
+}
+
+const dateList = getLastSevenDays();
 
 const recordsNumberList: number[] = reactive([])
 
